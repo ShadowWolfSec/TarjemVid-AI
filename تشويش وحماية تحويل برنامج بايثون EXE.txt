@@ -1,0 +1,22 @@
+.\venv\Scripts\pyinstaller.exe --clean main.spec
+
+
+C:\Program Files\ffmpeg-8.0.1-essentials_build\bin\ffmpeg.exe
+
+C:\ffmpeg-8.0.1-essentials_build\bin
+
+
+pyarmor gen -O dist_obfuscated main.py
+
+
+pyinstaller main.spec --clean
+
+.\venv\Scripts\pyinstaller.exe --clean main.spec
+
+
+
+pyarmor gen -O dist_obfuscated main.py audio_processor.py gui.py translator.py utils.py
+
+
+pyarmor gen -O dist_obfuscated main.py audio_processor.py hi.py translator.py utils.py 
+pyinstaller main.spec --clean

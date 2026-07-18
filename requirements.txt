@@ -1,0 +1,8 @@
+pywebview
+openai-whisper
+torch
+srt
+deep-translator
+python-docx
+chardet
+ffmpeg-python
