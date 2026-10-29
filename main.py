@@ -8,12 +8,8 @@ import multiprocessing
 from audio_processor import AudioProcessor
 from translator import translate_srt_file
 import utils
-# from gui import HTML
-# from guiii import HTML
-from hii import HTML
-# from hi import HTML
-# from index import HTML
-# from index import get_full_html, HTML, CSS, JS
+from gui import HTML
+
 
 
 class Bridge:
@@ -41,21 +37,16 @@ class Bridge:
         result = self.window.create_file_dialog(webview.FileDialog.SAVE, file_types=[f"Files (*{default_ext})"])
         return result[0] if result else None
 
-    # --- الحل الجذري للتضارب هنا ---
     def safe_execute_js(self, js_code):
-        """دالة آمنة تضمن تنفيذ الجافاسكريبت دائماً من خيط الواجهة الرئيسي"""
         if self.window:
-            # نتحقق إذا كان الخيط الحالي هو الخيط الرئيسي، وإلا نستخدم آلية مناسبة للويندوز
             try:
                 self.window.evaluate_js(js_code)
             except Exception:
-                # إذا فشل بسبب Thread، ننتظر جزءاً من الثانية ونحاول بطريقة موازية آمنة
                 pass
 
     def update_progress(self, percent, status):
         safe_status = json.dumps(status)
         js_code = f"updateProgress({percent}, {safe_status})"
-        # تشغيل مباشر بدون إنشاء Thread يدوي قد يربك WebView2
         self.safe_execute_js(js_code)
 
     def show_toast(self, message, type='info'):
@@ -78,13 +69,11 @@ class Bridge:
             except Exception as e:
                 self.show_toast(f"خطأ: {str(e)}", "error")
         
-        # قمنا بنقل الـ Thread إلى هنا ليصبح معزولاً تماماً عن خيط الواجهة
         t = threading.Thread(target=_run)
         t.daemon = True
         t.start()
-# جديدو
+
     def translate_srt(self, input_path, target_lang, save_path=None, source_lang='auto', options=None):
-    # إنشاء حدث إلغاء جديد لكل عملية ترجمة (يمحو أي إلغاء سابق)
         self.translation_cancel_event = threading.Event()
     
         if not save_path:
@@ -97,7 +86,7 @@ class Bridge:
         success = translate_srt_file(
             input_path, save_path, target_lang, 
             self.update_progress, 
-            self.translation_cancel_event,        # <-- نمرر حدث الإلغاء الخاص بالترجمة
+            self.translation_cancel_event,       
             source_lang=source_lang,
             keep_format=keep_format,
             trans_numbers=trans_numbers,
@@ -106,7 +95,7 @@ class Bridge:
         if success:
             self.show_toast(f"تم حفظ الترجمة في: {save_path}", "success")
         return success
-    # الى هنا جديدو
+
 
     def merge_srt(self, file_paths):
         save_path = self.save_file_dialog("Save Merged SRT", ".srt")
@@ -217,7 +206,7 @@ if __name__ == "__main__":
     
     bridge = Bridge()
     window = webview.create_window(
-        'TarjemVid-AI - احترافية استخراج وترجمة النصوص',
+        'TarjemVid-AI',
         html=HTML,
         js_api=bridge,
         width=1200,
@@ -226,6 +215,6 @@ if __name__ == "__main__":
     )
     bridge.window = window
     
-    # خيار إضافي وهام جداً لويندوز 10/11 لمنع تعليق خيوط WebView2
+    # خيار إضافي  لويندوز 10/11 لمنع تعليق خيوط WebView2
     webview.start(debug=False) 
     # ظهور DEvTools قد يسبب مشاكل في بعض الأحيان، لذا تم تعطيله في هذا السطر.
