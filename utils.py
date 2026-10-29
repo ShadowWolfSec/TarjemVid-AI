@@ -5,7 +5,7 @@ import chardet
 from datetime import timedelta
 
 def merge_srt_files(file_paths, output_path):
-    """دمج عدة ملفات SRT في ملف واحد مع الحفاظ على الترتيب"""
+
     all_subtitles = []
     current_time_offset = timedelta(0)
     
@@ -13,14 +13,13 @@ def merge_srt_files(file_paths, output_path):
         with open(path, 'r', encoding='utf-8', errors='ignore') as f:
             subs = list(srt.parse(f.read()))
             if subs:
-                # نعدل أرقام التسلسل والتوقيتات لتكون متتابعة
+
                 for s in subs:
                     s.start += current_time_offset
                     s.end += current_time_offset
                 all_subtitles.extend(subs)
                 current_time_offset = subs[-1].end + timedelta(seconds=1)
                 
-    # إعادة ترقيم التسلسل
     for i, sub in enumerate(all_subtitles):
         sub.index = i + 1
         
@@ -29,7 +28,6 @@ def merge_srt_files(file_paths, output_path):
     return True
 
 def split_srt_by_seconds(file_path, seconds, output_prefix):
-    """تقسيم ملف SRT إلى أجزاء بناءً على عدد الثواني"""
     with open(file_path, 'r', encoding='utf-8', errors='ignore') as f:
         subs = list(srt.parse(f.read()))
         
@@ -60,7 +58,6 @@ def split_srt_by_seconds(file_path, seconds, output_prefix):
     return True
 
 def adjust_srt_timing(file_path, output_path, seconds_delta):
-    """تعديل توقيت الترجمة بالتقديم أو التأخير"""
     delta = timedelta(seconds=float(seconds_delta))
     with open(file_path, 'r', encoding='utf-8', errors='ignore') as f:
         subs = list(srt.parse(f.read()))
@@ -88,7 +85,6 @@ def change_srt_encoding(file_path, output_path, to_enc='utf-8'):
     return True
 
 def extract_raw_text(file_path, output_path):
-    """استخراج النص فقط من ملف SRT بدون أرقام أو توقيتات"""
     with open(file_path, 'r', encoding='utf-8', errors='ignore') as f:
         subs = list(srt.parse(f.read()))
         
@@ -98,7 +94,6 @@ def extract_raw_text(file_path, output_path):
     return True
 
 def export_to_word(file_path, output_path):
-    """تصدير محتوى SRT إلى ملف Word منسق"""
     with open(file_path, 'r', encoding='utf-8', errors='ignore') as f:
         subs = list(srt.parse(f.read()))
         
@@ -120,10 +115,8 @@ def export_to_word(file_path, output_path):
     doc.save(output_path)
     return True
 def parse_srt_blocks(file_path):
-    """تحليل ملف SRT إلى كتل برمجية"""
     with open(file_path, 'r', encoding='utf-8', errors='ignore') as f:
         return list(srt.parse(f.read()))
 
 def rebuild_srt(subtitles):
-    """إعادة بناء نص SRT من قائمة الكتل"""
     return srt.compose(subtitles)
