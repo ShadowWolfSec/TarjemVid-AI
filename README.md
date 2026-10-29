@@ -104,4 +104,4 @@ TarjemVid-AI/
 
 ---
 
-*Developed by **RASHEED AL-RAJEHI @ SHADOW WOLF SECURITY***
+*Developed by **Eng. RASHEED AL-RAJEHI @ SHADOW WOLF SECURITY***
