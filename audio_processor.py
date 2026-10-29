@@ -12,12 +12,10 @@ class AudioProcessor:
         self.current_process = None
 
     def convert_video_to_srt(self, video_path, model_name, language, progress_callback):
-        """تحويل الفيديو إلى ترجمة SRT باستخدام Whisper"""
         self.cancel_event.clear()
         temp_audio = None
         
         try:
-            # 1. استخراج الصوت من الفيديو
             progress_callback(10, "جاري استخراج الصوت من الفيديو...")
             temp_audio = tempfile.NamedTemporaryFile(suffix=".wav", delete=False).name
             
@@ -39,16 +37,13 @@ class AudioProcessor:
             if self.current_process.returncode != 0:
                 raise Exception("فشل ffmpeg في استخراج الصوت")
 
-            # 2. تحميل نموذج Whisper
             progress_callback(30, f"جاري تحميل نموذج Whisper ({model_name})... قد يستغرق ذلك وقتاً في المرة الأولى")
             model = whisper.load_model(model_name)
             
             if self.cancel_event.is_set(): return None
 
-            # 3. التحويل (Transcribe)
             progress_callback(50, "جاري تحليل الصوت واستخراج النصوص...")
             
-            # ملاحظة: Whisper الأصلي لا يوفر callback للتقدم بسهولة، سنقوم بتحديث الحالة
             result = model.transcribe(
                 temp_audio, 
                 language=language if language != 'auto' else None,
@@ -58,7 +53,6 @@ class AudioProcessor:
             
             if self.cancel_event.is_set(): return None
 
-            # 4. تحويل النتائج إلى تنسيق SRT
             progress_callback(90, "جاري إنشاء ملف SRT...")
             subtitles = []
             for i, segment in enumerate(result['segments']):
