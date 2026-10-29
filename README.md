@@ -98,6 +98,8 @@ TarjemVid-AI/
 * **Application freezes or uses too many resources:**close and restart it or  Try Tiny or Base, close other resource-intensive applications, and.
 - **Incorrect characters in an SRT file:** Convert the file to UTF-8 using the app's encoding tool or a text editor.
 - **Translation fails:** Check your internet connection; translation uses an online service.
+> 💡 **TIP: Non-English Language Accuracy**  
+> The (Tiny, Base) models are extremely fast but perform best with English. For highly accurate and professional transcription of Arabic and other non-English           languages, it is highly recommended to use **Medium** or **Large** models.
 
 
 ---
